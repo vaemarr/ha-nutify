@@ -8,7 +8,7 @@
 
 <p align="center">
   <a href="https://hacs.xyz"><img src="https://img.shields.io/badge/HACS-Custom-orange.svg" alt="HACS Custom"></a>
-  <img src="https://img.shields.io/badge/version-1.0.3-blue.svg" alt="Version 1.0.2">
+  <img src="https://img.shields.io/badge/version-1.0.4-blue.svg" alt="Version 1.0.2">
   <img src="https://img.shields.io/badge/Home%20Assistant-2024.1+-41BDF5.svg?logo=homeassistant" alt="Home Assistant 2024.1+">
 </p>
 
@@ -81,6 +81,7 @@ The integration is configured via the Home Assistant UI (no YAML required).
 ### Setup Steps
 
 **Step 1 — Connection:**
+
 | Field | Description | Default |
 |---|---|---|
 | Host | IP address or hostname of your Nutify server | — |
@@ -88,6 +89,7 @@ The integration is configured via the Home Assistant UI (no YAML required).
 | Use SSL | Enable HTTPS (use if behind a reverse proxy with TLS) | `false` |
 
 **Step 2 — Authentication:**
+
 | Field | Description |
 |---|---|
 | Username | Your Nutify username |
@@ -98,6 +100,7 @@ The integration is configured via the Home Assistant UI (no YAML required).
 ### Options (after setup)
 
 Click the gear icon on the integration card to change:
+
 | Option | Description | Range | Default |
 |---|---|---|---|
 | Scan Interval | How often to poll Nutify for new data (seconds) | 10–300 | 30 |
