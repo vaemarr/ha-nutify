@@ -8,7 +8,9 @@ A custom Home Assistant integration that pulls real-time UPS metrics from a [Nut
 
 ## What is Nutify?
 
-Nutify is a web-based UPS (Uninterruptible Power Supply) monitoring platform that sits on top of [Network UPS Tools (NUT)](https://networkupstools.org/). It collects UPS data, generates reports, and provides an interactive dashboard. Nutify Link bridges Nutify's REST API with Home Assistant so you can monitor your UPS health, trigger automations on power events, and track energy consumption.
+[Nutify](https://github.com/DartSteven/Nutify) is a web-based UPS (Uninterruptible Power Supply) monitoring platform that sits on top of [Network UPS Tools (NUT)](https://networkupstools.org/). It collects UPS data, generates reports, and provides an interactive dashboard. Nutify Link bridges Nutify's REST API with Home Assistant so you can monitor your UPS health, trigger automations on power events, and track energy consumption.
+
+A huge thank you to [DartSteven](https://github.com/DartSteven) for building and maintaining Nutify — it's a fantastic application and the foundation that makes this integration possible.
 
 ---
 
