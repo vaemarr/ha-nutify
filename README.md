@@ -8,7 +8,7 @@
 
 <p align="center">
   <a href="https://hacs.xyz"><img src="https://img.shields.io/badge/HACS-Custom-orange.svg" alt="HACS Custom"></a>
-  <img src="https://img.shields.io/badge/version-1.0.6-blue.svg" alt="Version 1.0.2">
+  <img src="https://img.shields.io/badge/version-1.0.9-blue.svg" alt="Version 1.0.9">
   <img src="https://img.shields.io/badge/Home%20Assistant-2024.1+-41BDF5.svg?logo=homeassistant" alt="Home Assistant 2024.1+">
 </p>
 
@@ -224,6 +224,21 @@ automation:
           title: "UPS Low Battery"
           message: "Battery charge is {{ states('sensor.nutify_link_ups_battery_charge') }}%. Shut down systems!"
 ```
+
+---
+
+## ⚡ Energy Dashboard Integration
+
+The **Real Power** sensor (`sensor.<name>_real_power`) reports instantaneous watts. To track cumulative energy consumption (kWh) and add it to the HA Energy Dashboard:
+
+1. Go to **Settings → Devices & Services → Helpers → Create Helper**
+2. Choose **Riemann Sum Integral**
+3. Configure:
+   - **Input sensor:** `sensor.<your_ups>_real_power`
+   - **Integration method:** Left Riemann sum (or Trapezoidal for slightly more accuracy)
+   - **Precision:** 3
+   - **Unit time:** Hours
+4. The resulting helper will report kWh and can be added to the Energy Dashboard under **Individual devices**
 
 ---
 

@@ -1,7 +1,7 @@
 """Constants for the Nutify Link UPS Monitor integration."""
 
 DOMAIN = "nutify_link"
-PLATFORMS = ["sensor"]
+PLATFORMS = ["sensor", "binary_sensor"]
 
 # Configuration keys
 CONF_HOST = "host"

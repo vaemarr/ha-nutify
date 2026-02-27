@@ -26,8 +26,30 @@ from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from .const import DOMAIN, UPS_STATUS_MAP
+from .const import CONF_HOST, CONF_PORT, CONF_USE_SSL, DOMAIN, UPS_STATUS_MAP
 from .coordinator import NutifyCoordinator
+
+
+# ---------------------------------------------------------------------------
+# Shared device info helper (imported by binary_sensor.py)
+# ---------------------------------------------------------------------------
+
+
+def build_device_info(coordinator: NutifyCoordinator, entry: ConfigEntry) -> DeviceInfo:
+    """Build DeviceInfo populated from live NUT data where available."""
+    data = coordinator.data or {}
+    return DeviceInfo(
+        identifiers={(DOMAIN, entry.entry_id)},
+        name=entry.title,
+        manufacturer=data.get("ups_mfr") or "NUT / Nutify",
+        model=data.get("ups_model") or data.get("device_model"),
+        sw_version=data.get("ups_firmware"),
+        serial_number=data.get("ups_serial"),
+        configuration_url=(
+            f"{'https' if entry.data.get(CONF_USE_SSL) else 'http'}://"
+            f"{entry.data[CONF_HOST]}:{entry.data[CONF_PORT]}"
+        ),
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -244,22 +266,11 @@ class NutifySensor(CoordinatorEntity[NutifyCoordinator], SensorEntity):
         super().__init__(coordinator)
         self.entity_description = description
         self._attr_unique_id = f"{entry.entry_id}_{description.key}"
-        self._attr_device_info = DeviceInfo(
-            identifiers={(DOMAIN, entry.entry_id)},
-            name="Nutify Link UPS",
-            manufacturer="NUT / Nutify Link",
-            model=self._get_model(),
-            configuration_url=(
-                f"{'https' if entry.data.get('use_ssl') else 'http'}://"
-                f"{entry.data['host']}:{entry.data['port']}"
-            ),
-        )
+        self._entry = entry
 
-    def _get_model(self) -> str | None:
-        """Derive UPS model name from coordinator data if available."""
-        if self.coordinator.data:
-            return self.coordinator.data.get("device_model") or self.coordinator.data.get("ups_model")
-        return None
+    @property
+    def device_info(self) -> DeviceInfo:
+        return build_device_info(self.coordinator, self._entry)
 
     @property
     def native_value(self) -> Any:
