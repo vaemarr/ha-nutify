@@ -8,7 +8,7 @@
 
 <p align="center">
   <a href="https://hacs.xyz"><img src="https://img.shields.io/badge/HACS-Custom-orange.svg" alt="HACS Custom"></a>
-  <img src="https://img.shields.io/badge/version-1.0.4-blue.svg" alt="Version 1.0.2">
+  <img src="https://img.shields.io/badge/version-1.0.5-blue.svg" alt="Version 1.0.2">
   <img src="https://img.shields.io/badge/Home%20Assistant-2024.1+-41BDF5.svg?logo=homeassistant" alt="Home Assistant 2024.1+">
 </p>
 
@@ -78,9 +78,7 @@ A huge thank you to [DartSteven](https://github.com/DartSteven) for building and
 
 The integration is configured via the Home Assistant UI (no YAML required).
 
-### Setup Steps
-
-**Step 1 — Connection:**
+#### Step 1 — Connection
 
 | Field | Description | Default |
 |---|---|---|
@@ -88,7 +86,7 @@ The integration is configured via the Home Assistant UI (no YAML required).
 | Port | Port Nutify is listening on | `5050` |
 | Use SSL | Enable HTTPS (use if behind a reverse proxy with TLS) | `false` |
 
-**Step 2 — Authentication:**
+#### Step 2 — Authentication
 
 | Field | Description |
 |---|---|
@@ -97,9 +95,7 @@ The integration is configured via the Home Assistant UI (no YAML required).
 
 > If your Nutify instance has `DISABLE_AUTH=true` set, leave username and password fields blank (or enter any value — authentication is skipped).
 
-### Options (after setup)
-
-Click the gear icon on the integration card to change:
+#### Options (after setup)
 
 | Option | Description | Range | Default |
 |---|---|---|---|
