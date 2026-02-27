@@ -238,6 +238,7 @@ The **Real Power** sensor (`sensor.<name>_real_power`) reports instantaneous wat
    - **Integration method:** Left Riemann sum (or Trapezoidal for slightly more accuracy)
    - **Precision:** 3
    - **Unit time:** Hours
+   - **Max sub-interval:** `0` (leave at zero — since Nutify polls on a fixed interval the sensor updates regularly and no time-based nudging is needed)
 4. The resulting helper will report kWh and can be added to the Energy Dashboard under **Individual devices**
 
 ---
