@@ -1,12 +1,30 @@
 <p align="center">
-  <img src="logo.png" alt="Nutify Link" width="220">
+  <img src="https://raw.githubusercontent.com/vaemarr/ha-nutify/main/logo.png" alt="Nutify Link" width="220">
 </p>
 
-# Nutify Link — Home Assistant Integration
+<p align="center">
+  <strong>Nutify Link — Home Assistant Integration</strong>
+</p>
+
+<p align="center">
+  <a href="https://hacs.xyz"><img src="https://img.shields.io/badge/HACS-Custom-orange.svg" alt="HACS Custom"></a>
+  <img src="https://img.shields.io/badge/version-1.0.2-blue.svg" alt="Version 1.0.2">
+  <img src="https://img.shields.io/badge/Home%20Assistant-2024.1+-41BDF5.svg?logo=homeassistant" alt="Home Assistant 2024.1+">
+</p>
 
 A custom Home Assistant integration that pulls real-time UPS metrics from a [Nutify](https://github.com/DartSteven/Nutify) server and exposes them as sensors.
 
-## What is Nutify?
+---
+
+**Highlights:**
+- 📊 14 sensors across battery, power, voltage, status and energy
+- 🖱️ UI-only setup — no YAML required
+- ⏱️ Configurable polling interval (10–300 seconds)
+- 🔒 Automatic session auth with re-authentication on expiry
+
+---
+
+## ❓ What is Nutify?
 
 [Nutify](https://github.com/DartSteven/Nutify) is a web-based UPS (Uninterruptible Power Supply) monitoring platform that sits on top of [Network UPS Tools (NUT)](https://networkupstools.org/). It collects UPS data, generates reports, and provides an interactive dashboard. Nutify Link bridges Nutify's REST API with Home Assistant so you can monitor your UPS health, trigger automations on power events, and track energy consumption.
 
@@ -14,7 +32,7 @@ A huge thank you to [DartSteven](https://github.com/DartSteven) for building and
 
 ---
 
-## Requirements
+## ⚡ Requirements
 
 - Home Assistant 2024.1 or newer
 - Nutify v0.1.7 or newer running and accessible on your network
@@ -22,9 +40,17 @@ A huge thank you to [DartSteven](https://github.com/DartSteven) for building and
 
 ---
 
-## Installation
+## 📦 Installation
 
-### Manual Installation
+### 🏪 HACS (Recommended)
+
+1. In HACS, go to the overflow menu **(⋮) → Custom repositories**
+2. Add `https://github.com/vaemarr/ha-nutify` with category **Integration**
+3. Click **Download** on the Nutify Link card
+4. Restart Home Assistant
+5. Go to **Settings → Integrations → Add Integration** and search for **Nutify Link**
+
+### 🖥️ Manual Installation
 
 1. Copy the `nutify_link/` folder into your Home Assistant `config/custom_components/` directory:
    ```
@@ -46,13 +72,9 @@ A huge thank you to [DartSteven](https://github.com/DartSteven) for building and
 
 3. Go to **Settings → Integrations → Add Integration** and search for **Nutify Link**.
 
-### HACS (Future)
-
-This integration is not yet available in HACS. Manual installation is required.
-
 ---
 
-## Configuration
+## ⚙️ Configuration
 
 The integration is configured via the Home Assistant UI (no YAML required).
 
@@ -82,11 +104,11 @@ Click the gear icon on the integration card to change:
 
 ---
 
-## Sensors Created
+## 📊 Sensors Created
 
 All sensors are grouped under a single **Nutify Link UPS** device.
 
-### Battery
+### 🔋 Battery
 
 | Sensor | Unit | Description |
 |---|---|---|
@@ -97,7 +119,7 @@ All sensors are grouped under a single **Nutify Link UPS** device.
 
 > **Battery Temperature sensor:** This sensor is only created if your UPS hardware reports battery temperature via NUT. During the first data fetch at install time, the integration checks whether the `battery_temperature` variable is present in the NUT response. If your UPS does not expose this value, the sensor will not appear in Home Assistant at all — this is expected behaviour, not an error. UPS models that do report battery temperature will have the sensor created automatically with no extra configuration required.
 
-### Power
+### ⚡ Power
 
 | Sensor | Unit | Description |
 |---|---|---|
@@ -106,7 +128,7 @@ All sensors are grouped under a single **Nutify Link UPS** device.
 | Apparent Power | VA | Apparent power (volt-amperes) |
 | Nominal Power | W | UPS nominal power rating |
 
-### Voltage & Frequency
+### 🔌 Voltage & Frequency
 
 | Sensor | Unit | Description |
 |---|---|---|
@@ -115,14 +137,14 @@ All sensors are grouped under a single **Nutify Link UPS** device.
 | Input Frequency | Hz | Mains input frequency |
 | Output Frequency | Hz | Output frequency |
 
-### Status
+### 📶 Status
 
 | Sensor | Description |
 |---|---|
 | UPS Status | Raw NUT status code (OL, OB, LB, etc.) |
 | UPS Status Display | Human-readable status (Online, On Battery, Low Battery, etc.) |
 
-### Energy
+### 💡 Energy
 
 | Sensor | Unit | Description |
 |---|---|---|
@@ -130,7 +152,7 @@ All sensors are grouped under a single **Nutify Link UPS** device.
 
 ---
 
-## UPS Status Codes
+## 🔄 UPS Status Codes
 
 The **UPS Status** sensor reports raw NUT status codes. The **UPS Status Display** sensor translates these:
 
@@ -154,7 +176,7 @@ Statuses can be combined (e.g., `OL CHRG` = Online and Charging).
 
 ---
 
-## API Endpoints Used
+## 🔗 API Endpoints Used
 
 This integration polls the following Nutify endpoints:
 
@@ -170,7 +192,7 @@ Data is merged from all endpoints and made available to all sensors.
 
 ---
 
-## Automation Examples
+## 🤖 Automation Examples
 
 ### Alert when on battery power
 
@@ -206,7 +228,7 @@ automation:
 
 ---
 
-## Troubleshooting
+## 🛠️ Troubleshooting
 
 **Sensors show "Unavailable"**
 - Check that Nutify is running and accessible at the configured host/port.
@@ -217,20 +239,20 @@ automation:
 - Go to **Settings → Integrations**, find Nutify Link, and click **Re-authenticate**.
 
 **The Battery Temperature sensor is missing**
-- Not all UPS models expose battery temperature via NUT. If your UPS does not report it, the sensor is intentionally not created at install time. This is normal — see the [Battery Temperature note](#battery) above.
+- Not all UPS models expose battery temperature via NUT. If your UPS does not report it, the sensor is intentionally not created at install time. This is normal — see the [Battery Temperature note](#-battery) above.
 
 **Some sensors are always unavailable**
 - Not all UPS models expose all NUT variables. Sensors for unsupported variables will remain unavailable. If a sensor was previously working and is now unavailable, check that Nutify is healthy and the UPS is responding.
 
 ---
 
-## Future: API Key Authentication
+## 🔮 Future: API Key Authentication
 
 The Nutify developer is working on an API key mechanism. When available, this integration will be updated to support it with minimal configuration changes. No existing sensors or automations will be affected.
 
 ---
 
-## Source
+## 📎 Source
 
 - Nutify: https://github.com/DartSteven/Nutify
 - Home Assistant Custom Components: https://developers.home-assistant.io/docs/creating_component_index
