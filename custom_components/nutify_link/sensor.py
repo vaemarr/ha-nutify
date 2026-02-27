@@ -59,10 +59,11 @@ def build_device_info(coordinator: NutifyCoordinator, entry: ConfigEntry) -> Dev
 
 @dataclass(frozen=True, kw_only=True)
 class NutifySensorEntityDescription(SensorEntityDescription):
-    """Extends SensorEntityDescription with a value extraction function."""
+    """Extends SensorEntityDescription with value and attribute extraction functions."""
 
     value_fn: Callable[[dict[str, Any]], Any]
     optional: bool = False  # If True, sensor is skipped when data field is absent
+    attrs_fn: Callable[[dict[str, Any]], dict[str, Any]] | None = None
 
 
 # ---------------------------------------------------------------------------
@@ -101,6 +102,40 @@ def _ups_status_display(data: dict[str, Any]) -> str | None:
 
 
 # ---------------------------------------------------------------------------
+# Status ENUM options
+# ---------------------------------------------------------------------------
+
+# Realistic NUT ups.status combined values, ordered by NUT convention
+# (primary mode first, then modifier flags).
+_UPS_STATUS_RAW_OPTIONS: list[str] = [
+    "OL",
+    "OL CHRG",
+    "OL BOOST",
+    "OL TRIM",
+    "OL RB",
+    "OL HB",
+    "OL CHRG RB",
+    "OB",
+    "OB DISCHRG",
+    "OB LB",
+    "OB LB DISCHRG",
+    "OB RB",
+    "OB DISCHRG RB",
+    "BYPASS",
+    "CAL",
+    "OFF",
+    "OVER",
+]
+
+# Derived from raw options via the same translation used by _ups_status_display,
+# so the two lists always stay in sync.
+_UPS_STATUS_DISPLAY_OPTIONS: list[str] = [
+    " / ".join(UPS_STATUS_MAP.get(p, p) for p in raw.split())
+    for raw in _UPS_STATUS_RAW_OPTIONS
+]
+
+
+# ---------------------------------------------------------------------------
 # Sensor definitions
 # ---------------------------------------------------------------------------
 
@@ -113,6 +148,10 @@ SENSORS: tuple[NutifySensorEntityDescription, ...] = (
         native_unit_of_measurement=PERCENTAGE,
         state_class=SensorStateClass.MEASUREMENT,
         value_fn=lambda d: _as_float(d, "battery_charge"),
+        attrs_fn=lambda d: {k: v for k, v in {
+            "low_threshold": _as_float(d, "battery_charge_low"),
+            "warning_threshold": _as_float(d, "battery_charge_warning"),
+        }.items() if v is not None},
     ),
     NutifySensorEntityDescription(
         key="battery_runtime",
@@ -121,6 +160,13 @@ SENSORS: tuple[NutifySensorEntityDescription, ...] = (
         native_unit_of_measurement=UnitOfTime.MINUTES,
         state_class=SensorStateClass.MEASUREMENT,
         value_fn=_runtime_minutes,
+        attrs_fn=lambda d: {k: v for k, v in {
+            "low_threshold_min": (
+                round(_as_float(d, "battery_runtime_low") / 60, 1)
+                if _as_float(d, "battery_runtime_low") is not None
+                else None
+            ),
+        }.items() if v is not None},
     ),
     NutifySensorEntityDescription(
         key="battery_voltage",
@@ -129,6 +175,9 @@ SENSORS: tuple[NutifySensorEntityDescription, ...] = (
         native_unit_of_measurement=UnitOfElectricPotential.VOLT,
         state_class=SensorStateClass.MEASUREMENT,
         value_fn=lambda d: _as_float(d, "battery_voltage"),
+        attrs_fn=lambda d: {k: v for k, v in {
+            "nominal": _as_float(d, "battery_voltage_nominal"),
+        }.items() if v is not None},
     ),
     NutifySensorEntityDescription(
         key="battery_temperature",
@@ -187,6 +236,11 @@ SENSORS: tuple[NutifySensorEntityDescription, ...] = (
         native_unit_of_measurement=UnitOfElectricPotential.VOLT,
         state_class=SensorStateClass.MEASUREMENT,
         value_fn=lambda d: _as_float(d, "input_voltage"),
+        attrs_fn=lambda d: {k: v for k, v in {
+            "nominal": _as_float(d, "input_voltage_nominal"),
+            "minimum": _as_float(d, "input_voltage_minimum"),
+            "maximum": _as_float(d, "input_voltage_maximum"),
+        }.items() if v is not None},
     ),
     NutifySensorEntityDescription(
         key="output_voltage",
@@ -195,6 +249,9 @@ SENSORS: tuple[NutifySensorEntityDescription, ...] = (
         native_unit_of_measurement=UnitOfElectricPotential.VOLT,
         state_class=SensorStateClass.MEASUREMENT,
         value_fn=lambda d: _as_float(d, "output_voltage"),
+        attrs_fn=lambda d: {k: v for k, v in {
+            "nominal": _as_float(d, "output_voltage_nominal"),
+        }.items() if v is not None},
     ),
     NutifySensorEntityDescription(
         key="input_frequency",
@@ -216,11 +273,15 @@ SENSORS: tuple[NutifySensorEntityDescription, ...] = (
     NutifySensorEntityDescription(
         key="ups_status",
         name="UPS Status",
+        device_class=SensorDeviceClass.ENUM,
+        options=_UPS_STATUS_RAW_OPTIONS,
         value_fn=lambda d: d.get("ups_status"),
     ),
     NutifySensorEntityDescription(
         key="ups_status_display",
         name="UPS Status Display",
+        device_class=SensorDeviceClass.ENUM,
+        options=_UPS_STATUS_DISPLAY_OPTIONS,
         value_fn=_ups_status_display,
     ),
 )
@@ -278,6 +339,15 @@ class NutifySensor(CoordinatorEntity[NutifyCoordinator], SensorEntity):
         if self.coordinator.data is None:
             return None
         return self.entity_description.value_fn(self.coordinator.data)
+
+    @property
+    def extra_state_attributes(self) -> dict[str, Any] | None:
+        """Return supplementary attributes defined by attrs_fn, if any."""
+        if self.entity_description.attrs_fn is None:
+            return None
+        if self.coordinator.data is None:
+            return None
+        return self.entity_description.attrs_fn(self.coordinator.data) or None
 
     @property
     def available(self) -> bool:
