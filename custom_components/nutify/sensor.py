@@ -40,6 +40,7 @@ class NutifySensorEntityDescription(SensorEntityDescription):
     """Extends SensorEntityDescription with a value extraction function."""
 
     value_fn: Callable[[dict[str, Any]], Any]
+    optional: bool = False  # If True, sensor is skipped when data field is absent
 
 
 # ---------------------------------------------------------------------------
@@ -114,6 +115,7 @@ SENSORS: tuple[NutifySensorEntityDescription, ...] = (
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
         state_class=SensorStateClass.MEASUREMENT,
         value_fn=lambda d: _as_float(d, "battery_temperature"),
+        optional=True,
     ),
     # ---- Power ----
     NutifySensorEntityDescription(
@@ -216,7 +218,9 @@ async def async_setup_entry(
     coordinator: NutifyCoordinator = hass.data[DOMAIN][entry.entry_id]
 
     async_add_entities(
-        NutifySensor(coordinator, entry, description) for description in SENSORS
+        NutifySensor(coordinator, entry, description)
+        for description in SENSORS
+        if not description.optional or description.value_fn(coordinator.data) is not None
     )
 
 
