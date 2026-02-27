@@ -1,4 +1,4 @@
-"""The Nutify UPS Monitor integration."""
+"""The Nutify Link UPS Monitor integration."""
 
 from __future__ import annotations
 

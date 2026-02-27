@@ -1,6 +1,6 @@
 {
-  "domain": "nutify",
-  "name": "Nutify UPS Monitor",
+  "domain": "nutify_link",
+  "name": "Nutify Link",
   "codeowners": [],
   "config_flow": true,
   "dependencies": [],

@@ -1,10 +1,10 @@
-# Nutify Home Assistant Integration
+# Nutify Link — Home Assistant Integration
 
 A custom Home Assistant integration that pulls real-time UPS metrics from a [Nutify](https://github.com/DartSteven/Nutify) server and exposes them as sensors.
 
 ## What is Nutify?
 
-Nutify is a web-based UPS (Uninterruptible Power Supply) monitoring platform that sits on top of [Network UPS Tools (NUT)](https://networkupstools.org/). It collects UPS data, generates reports, and provides an interactive dashboard. This integration bridges Nutify's REST API with Home Assistant so you can monitor your UPS health, trigger automations on power events, and track energy consumption.
+Nutify is a web-based UPS (Uninterruptible Power Supply) monitoring platform that sits on top of [Network UPS Tools (NUT)](https://networkupstools.org/). It collects UPS data, generates reports, and provides an interactive dashboard. Nutify Link bridges Nutify's REST API with Home Assistant so you can monitor your UPS health, trigger automations on power events, and track energy consumption.
 
 ---
 
@@ -20,11 +20,11 @@ Nutify is a web-based UPS (Uninterruptible Power Supply) monitoring platform tha
 
 ### Manual Installation
 
-1. Copy the `nutify/` folder into your Home Assistant `config/custom_components/` directory:
+1. Copy the `nutify_link/` folder into your Home Assistant `config/custom_components/` directory:
    ```
    config/
    └── custom_components/
-       └── nutify/
+       └── nutify_link/
            ├── __init__.py
            ├── manifest.json
            ├── const.py
@@ -38,7 +38,7 @@ Nutify is a web-based UPS (Uninterruptible Power Supply) monitoring platform tha
 
 2. Restart Home Assistant.
 
-3. Go to **Settings → Integrations → Add Integration** and search for **Nutify**.
+3. Go to **Settings → Integrations → Add Integration** and search for **Nutify Link**.
 
 ### HACS (Future)
 
@@ -78,7 +78,7 @@ Click the gear icon on the integration card to change:
 
 ## Sensors Created
 
-All sensors are grouped under a single **Nutify UPS** device.
+All sensors are grouped under a single **Nutify Link UPS** device.
 
 ### Battery
 
@@ -173,13 +173,13 @@ automation:
   - alias: "UPS - Alert on battery"
     trigger:
       - platform: state
-        entity_id: sensor.nutify_ups_status_display
+        entity_id: sensor.nutify_link_ups_status_display
         to: "On Battery"
     action:
       - service: notify.mobile_app
         data:
           title: "Power Outage"
-          message: "UPS is running on battery! Runtime remaining: {{ states('sensor.nutify_ups_battery_runtime') }} minutes"
+          message: "UPS is running on battery! Runtime remaining: {{ states('sensor.nutify_link_ups_battery_runtime') }} minutes"
 ```
 
 ### Alert on low battery
@@ -189,13 +189,13 @@ automation:
   - alias: "UPS - Low battery warning"
     trigger:
       - platform: numeric_state
-        entity_id: sensor.nutify_ups_battery_charge
+        entity_id: sensor.nutify_link_ups_battery_charge
         below: 20
     action:
       - service: notify.mobile_app
         data:
           title: "UPS Low Battery"
-          message: "Battery charge is {{ states('sensor.nutify_ups_battery_charge') }}%. Shut down systems!"
+          message: "Battery charge is {{ states('sensor.nutify_link_ups_battery_charge') }}%. Shut down systems!"
 ```
 
 ---
@@ -205,10 +205,10 @@ automation:
 **Sensors show "Unavailable"**
 - Check that Nutify is running and accessible at the configured host/port.
 - Verify your credentials are correct.
-- Check the Home Assistant logs: **Settings → System → Logs** and filter for `nutify`.
+- Check the Home Assistant logs: **Settings → System → Logs** and filter for `nutify_link`.
 
 **Authentication errors after Nutify update**
-- Go to **Settings → Integrations**, find Nutify, and click **Re-authenticate**.
+- Go to **Settings → Integrations**, find Nutify Link, and click **Re-authenticate**.
 
 **The Battery Temperature sensor is missing**
 - Not all UPS models expose battery temperature via NUT. If your UPS does not report it, the sensor is intentionally not created at install time. This is normal — see the [Battery Temperature note](#battery) above.

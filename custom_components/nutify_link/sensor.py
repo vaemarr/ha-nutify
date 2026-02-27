@@ -1,4 +1,4 @@
-"""Sensor platform for the Nutify UPS Monitor integration."""
+"""Sensor platform for the Nutify Link UPS Monitor integration."""
 
 from __future__ import annotations
 
@@ -246,8 +246,8 @@ class NutifySensor(CoordinatorEntity[NutifyCoordinator], SensorEntity):
         self._attr_unique_id = f"{entry.entry_id}_{description.key}"
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, entry.entry_id)},
-            name="Nutify UPS",
-            manufacturer="NUT / Nutify",
+            name="Nutify Link UPS",
+            manufacturer="NUT / Nutify Link",
             model=self._get_model(),
             configuration_url=(
                 f"{'https' if entry.data.get('use_ssl') else 'http'}://"

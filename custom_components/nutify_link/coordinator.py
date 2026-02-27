@@ -1,4 +1,4 @@
-"""DataUpdateCoordinator for the Nutify UPS Monitor integration."""
+"""DataUpdateCoordinator for the Nutify Link UPS Monitor integration."""
 
 from __future__ import annotations
 

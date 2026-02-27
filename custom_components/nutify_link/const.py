@@ -1,6 +1,6 @@
-"""Constants for the Nutify UPS Monitor integration."""
+"""Constants for the Nutify Link UPS Monitor integration."""
 
-DOMAIN = "nutify"
+DOMAIN = "nutify_link"
 PLATFORMS = ["sensor"]
 
 # Configuration keys

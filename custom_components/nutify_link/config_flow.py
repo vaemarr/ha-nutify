@@ -1,4 +1,4 @@
-"""Config flow for the Nutify UPS Monitor integration."""
+"""Config flow for the Nutify Link UPS Monitor integration."""
 
 from __future__ import annotations
 
@@ -108,7 +108,7 @@ class NutifyConfigFlow(ConfigFlow, domain=DOMAIN):
                     CONF_PASSWORD: password,
                     CONF_SCAN_INTERVAL: DEFAULT_SCAN_INTERVAL,
                 }
-                title = f"Nutify @ {self._connection_data[CONF_HOST]}"
+                title = f"Nutify Link @ {self._connection_data[CONF_HOST]}"
                 return self.async_create_entry(title=title, data=config_data)
 
         schema = vol.Schema(

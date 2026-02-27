@@ -1,0 +1,57 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect to Nutify Link",
+        "description": "Enter the connection details for your Nutify Link UPS monitoring server.",
+        "data": {
+          "host": "Host",
+          "port": "Port",
+          "use_ssl": "Use SSL (HTTPS)"
+        },
+        "data_description": {
+          "host": "IP address or hostname of your Nutify Link server (e.g. 192.168.1.100)",
+          "port": "Port Nutify Link is listening on (default: 5050)",
+          "use_ssl": "Enable if Nutify Link is behind an HTTPS reverse proxy"
+        }
+      },
+      "auth": {
+        "title": "Nutify Link Authentication",
+        "description": "Enter your Nutify Link credentials for {host}. Leave blank if authentication is disabled on your Nutify Link instance.",
+        "data": {
+          "username": "Username",
+          "password": "Password"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Re-authenticate with Nutify Link",
+        "description": "Your Nutify Link session has expired or credentials changed. Please re-enter your credentials for {host}.",
+        "data": {
+          "username": "Username",
+          "password": "Password"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Unable to connect to Nutify Link. Check the host and port.",
+      "invalid_auth": "Invalid username or password.",
+      "unknown": "An unexpected error occurred. Check the logs for details."
+    },
+    "abort": {
+      "reauth_successful": "Re-authentication was successful."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Nutify Link Options",
+        "data": {
+          "scan_interval": "Scan Interval (seconds)"
+        },
+        "data_description": {
+          "scan_interval": "How often to poll Nutify Link for new data (10–300 seconds)"
+        }
+      }
+    }
+  }
+}
