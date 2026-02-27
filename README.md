@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/vaemarr/ha-nutify/main/logo.png" alt="Nutify Link" width="220">
+  <img src="https://raw.githubusercontent.com/vaemarr/ha-nutify-link/main/logo.png" alt="Nutify Link" width="220">
 </p>
 
 <p align="center">
@@ -8,7 +8,7 @@
 
 <p align="center">
   <a href="https://hacs.xyz"><img src="https://img.shields.io/badge/HACS-Custom-orange.svg" alt="HACS Custom"></a>
-  <img src="https://img.shields.io/badge/version-1.0.5-blue.svg" alt="Version 1.0.2">
+  <img src="https://img.shields.io/badge/version-1.0.6-blue.svg" alt="Version 1.0.2">
   <img src="https://img.shields.io/badge/Home%20Assistant-2024.1+-41BDF5.svg?logo=homeassistant" alt="Home Assistant 2024.1+">
 </p>
 
@@ -45,7 +45,7 @@ A huge thank you to [DartSteven](https://github.com/DartSteven) for building and
 ### 🏪 HACS (Recommended)
 
 1. In HACS, go to the overflow menu **(⋮) → Custom repositories**
-2. Add `https://github.com/vaemarr/ha-nutify` with category **Integration**
+2. Add `https://github.com/vaemarr/ha-nutify-link` with category **Integration**
 3. Click **Download** on the Nutify Link card
 4. Restart Home Assistant
 5. Go to **Settings → Integrations → Add Integration** and search for **Nutify Link**
