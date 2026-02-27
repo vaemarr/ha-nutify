@@ -86,8 +86,10 @@ All sensors are grouped under a single **Nutify UPS** device.
 |---|---|---|
 | Battery Charge | % | Current battery charge level |
 | Battery Runtime | min | Estimated runtime remaining on battery |
-| Battery Temperature | °C | Battery temperature |
+| Battery Temperature | °C | Battery temperature *(see note below)* |
 | Battery Voltage | V | Battery voltage |
+
+> **Battery Temperature sensor:** This sensor is only created if your UPS hardware reports battery temperature via NUT. During the first data fetch at install time, the integration checks whether the `battery_temperature` variable is present in the NUT response. If your UPS does not expose this value, the sensor will not appear in Home Assistant at all — this is expected behaviour, not an error. UPS models that do report battery temperature will have the sensor created automatically with no extra configuration required.
 
 ### Power
 
@@ -208,8 +210,11 @@ automation:
 **Authentication errors after Nutify update**
 - Go to **Settings → Integrations**, find Nutify, and click **Re-authenticate**.
 
+**The Battery Temperature sensor is missing**
+- Not all UPS models expose battery temperature via NUT. If your UPS does not report it, the sensor is intentionally not created at install time. This is normal — see the [Battery Temperature note](#battery) above.
+
 **Some sensors are always unavailable**
-- Not all UPS models expose all NUT variables. Sensors for unsupported variables will remain unavailable.
+- Not all UPS models expose all NUT variables. Sensors for unsupported variables will remain unavailable. If a sensor was previously working and is now unavailable, check that Nutify is healthy and the UPS is responding.
 
 ---
 
