@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="logo.png" alt="Nutify Link" width="220">
+</p>
+
 # Nutify Link — Home Assistant Integration
 
 A custom Home Assistant integration that pulls real-time UPS metrics from a [Nutify](https://github.com/DartSteven/Nutify) server and exposes them as sensors.
