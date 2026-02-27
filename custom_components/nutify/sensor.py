@@ -16,7 +16,6 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
     PERCENTAGE,
     UnitOfElectricPotential,
-    UnitOfEnergy,
     UnitOfFrequency,
     UnitOfPower,
     UnitOfTemperature,
@@ -60,8 +59,8 @@ def _as_float(data: dict[str, Any], key: str) -> float | None:
 
 
 def _runtime_minutes(data: dict[str, Any]) -> float | None:
-    """Convert battery.runtime (seconds) to minutes."""
-    seconds = _as_float(data, "battery.runtime")
+    """Convert battery_runtime (seconds) to minutes."""
+    seconds = _as_float(data, "battery_runtime")
     if seconds is None:
         return None
     return round(seconds / 60, 1)
@@ -69,7 +68,7 @@ def _runtime_minutes(data: dict[str, Any]) -> float | None:
 
 def _ups_status_display(data: dict[str, Any]) -> str | None:
     """Translate NUT status codes to a human-readable string."""
-    raw = data.get("ups.status")
+    raw = data.get("ups_status")
     if raw is None:
         return None
     # Status can be space-separated flags, e.g. "OL CHRG"
@@ -90,7 +89,7 @@ SENSORS: tuple[NutifySensorEntityDescription, ...] = (
         device_class=SensorDeviceClass.BATTERY,
         native_unit_of_measurement=PERCENTAGE,
         state_class=SensorStateClass.MEASUREMENT,
-        value_fn=lambda d: _as_float(d, "battery.charge"),
+        value_fn=lambda d: _as_float(d, "battery_charge"),
     ),
     NutifySensorEntityDescription(
         key="battery_runtime",
@@ -101,20 +100,20 @@ SENSORS: tuple[NutifySensorEntityDescription, ...] = (
         value_fn=_runtime_minutes,
     ),
     NutifySensorEntityDescription(
-        key="battery_temperature",
-        name="Battery Temperature",
-        device_class=SensorDeviceClass.TEMPERATURE,
-        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
-        state_class=SensorStateClass.MEASUREMENT,
-        value_fn=lambda d: _as_float(d, "battery.temperature"),
-    ),
-    NutifySensorEntityDescription(
         key="battery_voltage",
         name="Battery Voltage",
         device_class=SensorDeviceClass.VOLTAGE,
         native_unit_of_measurement=UnitOfElectricPotential.VOLT,
         state_class=SensorStateClass.MEASUREMENT,
-        value_fn=lambda d: _as_float(d, "battery.voltage"),
+        value_fn=lambda d: _as_float(d, "battery_voltage"),
+    ),
+    NutifySensorEntityDescription(
+        key="battery_temperature",
+        name="Battery Temperature",
+        device_class=SensorDeviceClass.TEMPERATURE,
+        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+        state_class=SensorStateClass.MEASUREMENT,
+        value_fn=lambda d: _as_float(d, "battery_temperature"),
     ),
     # ---- Power ----
     NutifySensorEntityDescription(
@@ -123,7 +122,7 @@ SENSORS: tuple[NutifySensorEntityDescription, ...] = (
         device_class=SensorDeviceClass.POWER_FACTOR,
         native_unit_of_measurement=PERCENTAGE,
         state_class=SensorStateClass.MEASUREMENT,
-        value_fn=lambda d: _as_float(d, "ups.load"),
+        value_fn=lambda d: _as_float(d, "ups_load"),
     ),
     NutifySensorEntityDescription(
         key="ups_real_power",
@@ -131,7 +130,7 @@ SENSORS: tuple[NutifySensorEntityDescription, ...] = (
         device_class=SensorDeviceClass.POWER,
         native_unit_of_measurement=UnitOfPower.WATT,
         state_class=SensorStateClass.MEASUREMENT,
-        value_fn=lambda d: _as_float(d, "ups.realpower"),
+        value_fn=lambda d: _as_float(d, "ups_realpower"),
     ),
     NutifySensorEntityDescription(
         key="ups_apparent_power",
@@ -139,7 +138,7 @@ SENSORS: tuple[NutifySensorEntityDescription, ...] = (
         device_class=SensorDeviceClass.APPARENT_POWER,
         native_unit_of_measurement="VA",
         state_class=SensorStateClass.MEASUREMENT,
-        value_fn=lambda d: _as_float(d, "ups.power"),
+        value_fn=lambda d: _as_float(d, "ups_power"),
     ),
     NutifySensorEntityDescription(
         key="ups_nominal_power",
@@ -147,7 +146,14 @@ SENSORS: tuple[NutifySensorEntityDescription, ...] = (
         device_class=SensorDeviceClass.POWER,
         native_unit_of_measurement=UnitOfPower.WATT,
         state_class=SensorStateClass.MEASUREMENT,
-        value_fn=lambda d: _as_float(d, "ups.realpower.nominal"),
+        value_fn=lambda d: _as_float(d, "ups_realpower_nominal"),
+    ),
+    NutifySensorEntityDescription(
+        key="ups_efficiency",
+        name="UPS Efficiency",
+        native_unit_of_measurement=PERCENTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
+        value_fn=lambda d: _as_float(d, "ups_efficiency"),
     ),
     # ---- Voltage & Frequency ----
     NutifySensorEntityDescription(
@@ -156,7 +162,7 @@ SENSORS: tuple[NutifySensorEntityDescription, ...] = (
         device_class=SensorDeviceClass.VOLTAGE,
         native_unit_of_measurement=UnitOfElectricPotential.VOLT,
         state_class=SensorStateClass.MEASUREMENT,
-        value_fn=lambda d: _as_float(d, "input.voltage"),
+        value_fn=lambda d: _as_float(d, "input_voltage"),
     ),
     NutifySensorEntityDescription(
         key="output_voltage",
@@ -164,7 +170,7 @@ SENSORS: tuple[NutifySensorEntityDescription, ...] = (
         device_class=SensorDeviceClass.VOLTAGE,
         native_unit_of_measurement=UnitOfElectricPotential.VOLT,
         state_class=SensorStateClass.MEASUREMENT,
-        value_fn=lambda d: _as_float(d, "output.voltage"),
+        value_fn=lambda d: _as_float(d, "output_voltage"),
     ),
     NutifySensorEntityDescription(
         key="input_frequency",
@@ -172,7 +178,7 @@ SENSORS: tuple[NutifySensorEntityDescription, ...] = (
         device_class=SensorDeviceClass.FREQUENCY,
         native_unit_of_measurement=UnitOfFrequency.HERTZ,
         state_class=SensorStateClass.MEASUREMENT,
-        value_fn=lambda d: _as_float(d, "input.frequency"),
+        value_fn=lambda d: _as_float(d, "input_frequency"),
     ),
     NutifySensorEntityDescription(
         key="output_frequency",
@@ -180,32 +186,23 @@ SENSORS: tuple[NutifySensorEntityDescription, ...] = (
         device_class=SensorDeviceClass.FREQUENCY,
         native_unit_of_measurement=UnitOfFrequency.HERTZ,
         state_class=SensorStateClass.MEASUREMENT,
-        value_fn=lambda d: _as_float(d, "output.frequency"),
+        value_fn=lambda d: _as_float(d, "output_frequency"),
     ),
     # ---- Status ----
     NutifySensorEntityDescription(
         key="ups_status",
         name="UPS Status",
-        value_fn=lambda d: d.get("ups.status"),
+        value_fn=lambda d: d.get("ups_status"),
     ),
     NutifySensorEntityDescription(
         key="ups_status_display",
         name="UPS Status Display",
         value_fn=_ups_status_display,
     ),
-    # ---- Energy ----
     NutifySensorEntityDescription(
-        key="energy_consumption",
-        name="Energy Consumption",
-        device_class=SensorDeviceClass.ENERGY,
-        native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
-        state_class=SensorStateClass.TOTAL_INCREASING,
-        # Nutify may expose cumulative kWh under various keys; try a few.
-        value_fn=lambda d: (
-            _as_float(d, "ups.kwh")
-            or _as_float(d, "_power.total_kwh")
-            or _as_float(d, "_battery.kwh")
-        ),
+        key="battery_charger_status",
+        name="Battery Charger Status",
+        value_fn=lambda d: d.get("battery_charger_status"),
     ),
 )
 
@@ -262,7 +259,7 @@ class NutifySensor(CoordinatorEntity[NutifyCoordinator], SensorEntity):
     def _get_model(self) -> str | None:
         """Derive UPS model name from coordinator data if available."""
         if self.coordinator.data:
-            return self.coordinator.data.get("device.model") or self.coordinator.data.get("ups.model")
+            return self.coordinator.data.get("device_model") or self.coordinator.data.get("ups_model")
         return None
 
     @property
