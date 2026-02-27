@@ -20,7 +20,11 @@
         "description": "Enter your Nutify Link credentials for {host}. Leave blank if authentication is disabled on your Nutify Link instance.",
         "data": {
           "username": "Username",
-          "password": "Password"
+          "password": "Password",
+          "scan_interval": "Scan Interval (seconds)"
+        },
+        "data_description": {
+          "scan_interval": "How often to poll Nutify Link for new data (minimum 30 seconds)"
         }
       },
       "reauth_confirm": {
@@ -49,7 +53,7 @@
           "scan_interval": "Scan Interval (seconds)"
         },
         "data_description": {
-          "scan_interval": "How often to poll Nutify Link for new data (10–300 seconds)"
+          "scan_interval": "How often to poll Nutify Link for new data (30–300 seconds)"
         }
       }
     }

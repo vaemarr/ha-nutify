@@ -106,7 +106,7 @@ class NutifyConfigFlow(ConfigFlow, domain=DOMAIN):
                     **self._connection_data,
                     CONF_USERNAME: username,
                     CONF_PASSWORD: password,
-                    CONF_SCAN_INTERVAL: DEFAULT_SCAN_INTERVAL,
+                    CONF_SCAN_INTERVAL: user_input[CONF_SCAN_INTERVAL],
                 }
                 title = f"Nutify Link @ {self._connection_data[CONF_HOST]}"
                 return self.async_create_entry(title=title, data=config_data)
@@ -115,6 +115,9 @@ class NutifyConfigFlow(ConfigFlow, domain=DOMAIN):
             {
                 vol.Optional(CONF_USERNAME, default=""): str,
                 vol.Optional(CONF_PASSWORD, default=""): str,
+                vol.Required(CONF_SCAN_INTERVAL, default=DEFAULT_SCAN_INTERVAL): vol.All(
+                    int, vol.Range(min=DEFAULT_SCAN_INTERVAL, max=300)
+                ),
             }
         )
 
@@ -231,7 +234,7 @@ class NutifyOptionsFlow(OptionsFlow):
         schema = vol.Schema(
             {
                 vol.Required(CONF_SCAN_INTERVAL, default=current_interval): vol.All(
-                    int, vol.Range(min=10, max=300)
+                    int, vol.Range(min=DEFAULT_SCAN_INTERVAL, max=300)
                 ),
             }
         )
