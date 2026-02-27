@@ -199,11 +199,6 @@ SENSORS: tuple[NutifySensorEntityDescription, ...] = (
         name="UPS Status Display",
         value_fn=_ups_status_display,
     ),
-    NutifySensorEntityDescription(
-        key="battery_charger_status",
-        name="Battery Charger Status",
-        value_fn=lambda d: d.get("battery_charger_status"),
-    ),
 )
 
 
