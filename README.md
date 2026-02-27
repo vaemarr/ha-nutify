@@ -8,7 +8,7 @@
 
 <p align="center">
   <a href="https://hacs.xyz"><img src="https://img.shields.io/badge/HACS-Custom-orange.svg" alt="HACS Custom"></a>
-  <img src="https://img.shields.io/badge/version-1.0.2-blue.svg" alt="Version 1.0.2">
+  <img src="https://img.shields.io/badge/version-1.0.3-blue.svg" alt="Version 1.0.2">
   <img src="https://img.shields.io/badge/Home%20Assistant-2024.1+-41BDF5.svg?logo=homeassistant" alt="Home Assistant 2024.1+">
 </p>
 
