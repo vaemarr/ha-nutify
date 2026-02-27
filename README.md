@@ -153,25 +153,42 @@ All sensors are grouped under a single **Nutify Link UPS** device.
 
 ## 🔄 UPS Status Codes
 
-The **UPS Status** sensor reports raw NUT status codes. The **UPS Status Display** sensor translates these:
+Both status sensors use `SensorDeviceClass.ENUM` — when creating automations or conditions in the HA UI, a dropdown of all recognised states is available without needing to type them manually.
 
-| Code | Display |
+| UPS Status (raw) | UPS Status Display |
 |---|---|
-| OL | Online |
-| OB | On Battery |
-| LB | Low Battery |
-| HB | High Battery |
-| RB | Replace Battery |
-| CHRG | Charging |
-| DISCHRG | Discharging |
-| BYPASS | Bypass |
-| CAL | Calibrating |
-| OFF | Offline |
-| OVER | Overloaded |
-| TRIM | Trimming |
-| BOOST | Boosting |
+| `OL` | Online |
+| `OL CHRG` | Online / Charging |
+| `OL BOOST` | Online / Boosting |
+| `OL TRIM` | Online / Trimming |
+| `OL RB` | Online / Replace Battery |
+| `OL HB` | Online / High Battery |
+| `OL CHRG RB` | Online / Charging / Replace Battery |
+| `OB` | On Battery |
+| `OB DISCHRG` | On Battery / Discharging |
+| `OB LB` | On Battery / Low Battery |
+| `OB LB DISCHRG` | On Battery / Low Battery / Discharging |
+| `OB RB` | On Battery / Replace Battery |
+| `OB DISCHRG RB` | On Battery / Discharging / Replace Battery |
+| `BYPASS` | Bypass |
+| `CAL` | Calibrating |
+| `OFF` | Offline |
+| `OVER` | Overloaded |
 
-Statuses can be combined (e.g., `OL CHRG` = Online and Charging).
+> If your UPS reports an unusual combination not in the table above, the sensor state is still set correctly — the value simply won't appear in the UI dropdown, but manual entry works as a fallback.
+
+### Binary sensors for individual flags
+
+For automations that should trigger regardless of modifier flags (e.g., fire whenever the UPS is on battery, whether the state is `OB`, `OB DISCHRG`, or `OB LB DISCHRG`), use the dedicated binary sensors instead of matching the status string:
+
+| Binary Sensor | Triggers when |
+|---|---|
+| Online | `OL` flag is present |
+| On Battery | `OB` flag is present |
+| Low Battery | `LB` flag is present |
+| Charging | `CHRG` flag is present |
+| Replace Battery | `RB` flag is present |
+| Overloaded | `OVER` flag is present |
 
 ---
 
@@ -200,14 +217,16 @@ automation:
   - alias: "UPS - Alert on battery"
     trigger:
       - platform: state
-        entity_id: sensor.nutify_link_ups_status_display
-        to: "On Battery"
+        entity_id: binary_sensor.nutify_link_ups_on_battery
+        to: "on"
     action:
       - service: notify.mobile_app
         data:
           title: "Power Outage"
           message: "UPS is running on battery! Runtime remaining: {{ states('sensor.nutify_link_ups_battery_runtime') }} minutes"
 ```
+
+> Using the **On Battery** binary sensor is recommended over matching the status string — it triggers correctly regardless of which modifier flags are also active (`OB`, `OB DISCHRG`, `OB LB DISCHRG`, etc.).
 
 ### Alert on low battery
 

@@ -31,3 +31,6 @@ Thumbs.db
 *.db-wal
 *.db-shm
 home-assistant.log*
+
+# Local planning
+TODO.md
